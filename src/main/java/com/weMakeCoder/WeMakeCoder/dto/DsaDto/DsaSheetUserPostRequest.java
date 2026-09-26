@@ -1,18 +1,14 @@
-package com.weMakeCoder.WeMakeCoder.dto;
+package com.weMakeCoder.WeMakeCoder.dto.DsaDto;
 
 import com.weMakeCoder.WeMakeCoder.enums.Source;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-public record DsaSheetUserResponse(
-        Long id,
+public record DsaSheetUserPostRequest(
         String title,
         String url,
         Source source,
-        Instant submittedAt,
-        Instant updatedAt,
         List<UUID> groupIds,
         String notes
 ) {

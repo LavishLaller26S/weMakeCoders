@@ -36,7 +36,7 @@ public class DsaSheet {
     @Column(nullable = false,length=255)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String url;
 
     @Setter

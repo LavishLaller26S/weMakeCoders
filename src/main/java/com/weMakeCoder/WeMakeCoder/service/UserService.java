@@ -1,23 +1,23 @@
 package com.weMakeCoder.WeMakeCoder.service;
 
-import com.weMakeCoder.WeMakeCoder.dto.DsaSheetUserResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
+import com.weMakeCoder.WeMakeCoder.dto.DsaDto.DsaSheetUserPostRequest;
+import lombok.AllArgsConstructor;
+import com.weMakeCoder.WeMakeCoder.dto.DsaDto.DsaSheetUserResponse;
 import com.weMakeCoder.WeMakeCoder.dto.UserDto.UserResponse;
 import com.weMakeCoder.WeMakeCoder.entity.DsaSheet;
-import com.weMakeCoder.WeMakeCoder.entity.Group;
 import com.weMakeCoder.WeMakeCoder.entity.GroupDsaMapper;
 import com.weMakeCoder.WeMakeCoder.entity.User;
 import com.weMakeCoder.WeMakeCoder.exception.UserNotExistsException;
 import com.weMakeCoder.WeMakeCoder.repository.DsaSheetRepository;
 import com.weMakeCoder.WeMakeCoder.repository.GroupDsaMapperRepository;
 import com.weMakeCoder.WeMakeCoder.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 
 @Service
@@ -27,6 +27,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final DsaSheetRepository dsaSheetRepository;
     private final GroupDsaMapperRepository groupDsaMapperRepository;
+    private final DsaService dsaService;
 
 
     public List<DsaSheetUserResponse> getDsaEntries(UUID userId) {
@@ -80,5 +81,13 @@ public class UserService {
                 user.getUpdatedAt(),
                 user.isActive()
         );
+    }
+
+    public DsaSheetUserResponse addDsaEntry(DsaSheetUserPostRequest request,UUID userId) {
+        return dsaService.addDsaEntry(request,userId);
+    }
+
+    public void deleteDsaEntries(List<Long> ids, UUID userId) {
+        dsaService.deleteDsaEntry(ids,userId);
     }
 }

@@ -11,7 +11,6 @@ public record UserPatchRequest (
         String mail,
         String password,
         Gender gender,
-        LocalDate dateOfBirth,
-        ChangeRequest request
+        LocalDate dateOfBirth
 ){
 }
