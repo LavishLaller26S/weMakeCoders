@@ -12,7 +12,7 @@ import com.weMakeCoder.WeMakeCoder.dto.UserDto.UserResponse;
 import com.weMakeCoder.WeMakeCoder.entity.DsaSheet;
 import com.weMakeCoder.WeMakeCoder.entity.GroupDsaMapper;
 import com.weMakeCoder.WeMakeCoder.entity.User;
-import com.weMakeCoder.WeMakeCoder.exception.UserNotExistsException;
+import com.weMakeCoder.WeMakeCoder.exception.UserNotFoundException;
 import com.weMakeCoder.WeMakeCoder.repository.DsaSheetRepository;
 import com.weMakeCoder.WeMakeCoder.repository.GroupDsaMapperRepository;
 import com.weMakeCoder.WeMakeCoder.repository.UserRepository;
@@ -63,7 +63,7 @@ public class UserService {
 
     public User checkUserExists(UUID userId){
         return userRepository.findById(userId).orElseThrow(()->
-              new UserNotExistsException("user does not exist with this id")
+              new UserNotFoundException("user does not exist with this id")
         );
     }
 
