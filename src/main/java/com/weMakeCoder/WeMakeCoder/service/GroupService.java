@@ -11,6 +11,7 @@ import com.weMakeCoder.WeMakeCoder.enums.GroupRole;
 import com.weMakeCoder.WeMakeCoder.exception.GroupNameAlreadyExistException;
 import com.weMakeCoder.WeMakeCoder.exception.GroupNotFoundException;
 import com.weMakeCoder.WeMakeCoder.exception.InvalidCredentialsException;
+import com.weMakeCoder.WeMakeCoder.exception.UserAlreadyInTheGroupException;
 import com.weMakeCoder.WeMakeCoder.repository.GroupRepository;
 import com.weMakeCoder.WeMakeCoder.repository.MembersRepository;
 import com.weMakeCoder.WeMakeCoder.util.JoinCodeGenerator;
@@ -44,7 +45,9 @@ public class GroupService {
    @Transactional
     public GroupResponse createGroup(CreateGroupPostRequest request, UUID userId) {
         User user=userService.checkUserExists(userId);
+
         nameExists(request.groupName());
+
         Group group;
         String hashPass=encoder.encode(request.password());
         for(int attempts=1;attempts<=MAX_ATTEMPTS;attempts++){
@@ -90,27 +93,32 @@ public class GroupService {
     public JoinGroupResponse joinGroup(JoinGroupPostRequest request, UUID userId) {
         User user=userService.checkUserExists(userId);
         Group group=groupExists(request.groupId());
-        if (group.getGroupCode().equals(request.groupCode())){
-            if(encoder.matches(request.password(),group.getPasswordHash())){
-                group.setMembersCount(group.getMembersCount()+1);
 
-                groupExists(request.groupId());
+        if(membersRepository.existsByGroupIdAndUserId(request.groupId(),userId)){
+            throw new UserAlreadyInTheGroupException("user is already a member in the group");
+        }
 
-                groupRepository.save(group);
-                Members newMem=Members.builder().
-                        user(user).
-                        group(group).
-                        build();
-                newMem.setRole(GroupRole.MEMBER);
-                membersRepository.save(newMem);
-            }
-            else{
-                throw new InvalidCredentialsException("provided credentials does not match requirement");
-            }
+        if (!group.getGroupCode().equals(request.groupCode()) ||
+                !encoder.matches(request.password(),group.getPasswordHash())) {
+            throw new InvalidCredentialsException("provided credentials does not meet requirement");
         }
-        else{
-            throw new InvalidCredentialsException("provided credentials does not match requirement");
+
+        group.setMembersCount(group.getMembersCount()+1);
+
+        groupRepository.save(group);
+        Members newMem=Members.builder().
+                user(user).
+                group(group).
+                build();
+        newMem.setRole(GroupRole.MEMBER);
+        try {
+            membersRepository.save(newMem);
         }
+        catch (DataIntegrityViolationException e){
+            throw new UserAlreadyInTheGroupException("user is already a member in the group");
+        }
+
+
         return new JoinGroupResponse(user.getId(),group.getId(),GroupRole.MEMBER);
 
 

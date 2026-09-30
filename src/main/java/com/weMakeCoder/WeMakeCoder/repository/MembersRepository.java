@@ -20,4 +20,6 @@ public interface MembersRepository extends JpaRepository<Members,Long> {
             "from Members m join m.group g " +
             "where m.user.id = :userId")
     List<GroupResponse> findGroupResponsesByUserId(@Param("userId") UUID userId);
+
+    boolean existsByGroupIdAndUserId(UUID uuid, UUID userId);
 }
