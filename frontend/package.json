@@ -1,0 +1,8 @@
+{
+  "name": "wemakecoder-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Miro-based home-page UI for testing the existing WeMakeCoder APIs",
+  "scripts": { "start": "node server.cjs", "dev": "node server.cjs" },
+  "engines": { "node": ">=18" }
+}

@@ -103,7 +103,6 @@ public class GroupService {
             throw new InvalidCredentialsException("provided credentials does not meet requirement");
         }
 
-
         Members newMem=Members.builder().
                 user(user).
                 group(group).
@@ -111,22 +110,13 @@ public class GroupService {
         newMem.setRole(GroupRole.MEMBER);
         try {
             membersRepository.save(newMem);
+            groupRepository.incrementMembersCount(group.getId());
         }
         catch (DataIntegrityViolationException e){
             throw new UserAlreadyInTheGroupException("user is already a member in the group");
         }
         return new JoinGroupResponse(user.getId(),group.getId(),GroupRole.MEMBER);
     }
-
-
-
-
-
-
-
-
-
-
 
 
 

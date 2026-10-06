@@ -48,7 +48,7 @@ public class Group {
     private String passwordHash;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false,updatable = false)
     private Long membersCount=1L;
 
     @Builder

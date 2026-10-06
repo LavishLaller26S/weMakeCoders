@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WeMakeCoder · DSA Question Tracker</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./index.html"><span class="brand-symbol" aria-hidden="true">&lt;/&gt;</span>WeMakeCoder</a>
+      <div class="header-actions"><span class="phase">Home · development</span><button class="header-button" id="inspect-button">API activity <span id="request-count">0</span></button><button class="avatar" id="profile-button" aria-label="View user profile">?</button></div>
+    </header>
+
+    <details class="connection" id="connection-panel" open>
+      <summary><span><span class="connection-dot" id="connection-dot"></span>API connection <span class="connection-summary" id="connection-summary">Set your user ID to begin</span></span><span class="small">Configure ▾</span></summary>
+      <form id="connection-form" class="connection-form">
+        <label>API base URL<input id="base-url" type="url" placeholder="http://localhost:8080" required><span class="hint">Use this backend's address.</span></label>
+        <label class="user-id-label">User ID<input id="user-id" autocomplete="off" placeholder="Existing user UUID" required><span class="hint">Select the user you want to test as.</span></label>
+        <label>DSA path ID<input id="dsa-path-id" value="1" autocomplete="off"><span class="hint">Required by the current GET route.</span></label>
+        <button class="button primary" type="submit" id="load-button">Load home page</button>
+      </form>
+      <p class="connection-footnote">No login needed. The current DSA GET route includes an entry ID but returns the user's full list.</p>
+    </details>
+
+    <main class="home-grid">
+      <section class="card tracker" aria-labelledby="tracker-title">
+        <div class="section-header"><div><h1 id="tracker-title">DSA Question Tracker</h1><p>Keep your questions and group contributions in one place.</p></div><button class="icon-button" id="refresh-questions" aria-label="Refresh questions" title="Refresh questions">↻</button></div>
+        <div class="toolbar"><div class="toolbar-actions"><button class="button primary" id="add-question">+ Add Question</button><button class="button danger" id="delete-questions" disabled>Delete <span id="selection-count"></span></button></div><span class="count-label" id="question-count">Not loaded</span></div>
+        <div class="api-row"><span class="method get">GET</span><code id="questions-api"></code></div>
+        <div class="notice" id="questions-notice" role="status" hidden></div>
+        <div class="table-scroll"><table><thead><tr><th class="select-cell"><input type="checkbox" id="select-all" aria-label="Select all questions" disabled></th><th>Index</th><th>Title</th><th>URL</th><th>Source</th><th>Submitted At</th><th>Groups</th><th>Notes</th><th>Action</th></tr></thead><tbody id="question-rows"></tbody></table></div>
+        <div class="empty-state" id="question-empty"><div class="empty-icon" aria-hidden="true">&lt;/&gt;</div><h2>Your questions will appear here</h2><p>Enter an existing user ID and load the home page.<br>Every action is connected to its labelled API.</p></div>
+        <div class="card-foot"><span>Only data returned by your backend is shown.</span><span class="subtle">Update API pending</span></div>
+      </section>
+
+      <aside class="card groups" aria-labelledby="groups-title">
+        <div class="section-header"><div><h2 id="groups-title">Groups</h2><p id="group-count">Your practice circles</p></div><button class="icon-button" id="refresh-groups" aria-label="Refresh groups" title="Refresh groups">↻</button></div>
+        <div class="api-row"><span class="method get">GET</span><code id="groups-api"></code></div>
+        <div class="notice" id="groups-notice" role="status" hidden></div>
+        <div id="group-list" class="group-list"><div class="group-empty"><span aria-hidden="true">◎</span><h3>No groups loaded</h3><p>Load your home page to see your groups.</p></div></div>
+        <div class="group-actions"><button class="button green" id="create-group">Create Group</button><button class="button amber" id="join-group">Join Group</button></div>
+        <div class="api-legend"><span>API labels show the exact request behind each action.</span><button class="text-button" id="inspect-button-bottom">View requests →</button></div>
+      </aside>
+    </main>
+    <footer class="footer"><span>WeMakeCoder <span class="footer-divider">/</span> Home page</span><span>v1.0</span></footer>
+  </div>
+
+  <dialog id="action-dialog" class="action-dialog"><div class="dialog-heading"><div><h2 id="dialog-title"></h2><p id="dialog-description"></p></div><button type="button" class="close-button" id="close-dialog" aria-label="Close dialog">×</button></div><div class="api-row modal-api"><span class="method" id="dialog-method"></span><code id="dialog-api"></code></div><form id="action-form" novalidate><div id="dialog-fields"></div><div id="dialog-feedback" class="notice" role="status" hidden></div><details class="payload-preview"><summary>Request body preview <span class="small">Passwords masked</span></summary><pre id="payload-preview"></pre></details><div class="dialog-footer"><button type="button" class="button neutral" id="cancel-dialog">Close</button><button type="submit" class="button primary" id="submit-action"></button></div></form></dialog>
+
+  <dialog id="inspector" class="inspector"><div class="inspector-heading"><div><h2>API activity</h2><p>Requests sent from this UI, newest first.</p></div><button class="close-button" id="close-inspector" aria-label="Close API activity">×</button></div><div class="inspector-tools"><span id="activity-summary">No requests yet</span><button class="text-button" id="export-requests">Export activity</button></div><div id="activity-list" class="activity-list"><div class="activity-empty">Use the home page to start testing.<br>Your requests and responses will appear here.</div></div></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+</body>
+</html>
